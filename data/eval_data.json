@@ -1,0 +1,42 @@
+[
+    {
+        "question": "What is the main focus of the project described in the paper?",
+        "ground_truth": "The project focuses on integrating satellite surveys and coastal station algorithms for real-time ship detection along Morocco's maritime coastline."
+    },
+    {
+        "question": "What is the role of Fast RCNN in the project?",
+        "ground_truth": "Fast RCNN is used for the initial detection of ships in satellite images, analyzing the images to identify potential ship locations."
+    },
+    {
+        "question": "Which dataset is used to train the YOLOv12 algorithm?",
+        "ground_truth": "The YOLOv12 algorithm is trained on a military ship dataset to detect foreign ship intrusions."
+    },
+    {
+        "question": "What is the purpose of the segmentation model in the project?",
+        "ground_truth": "The segmentation model is used to classify various types of ships detected by the system, such as cargo, military, or fishing ships."
+    },
+    {
+        "question": "What are the key improvements of the YOLOv12 architecture over previous versions?",
+        "ground_truth": "YOLOv12 introduces an attention-centric architecture, with improvements such as the Area Attention Module, Residual Efficient Layer Aggregation Networks (R-ELAN), and optimized feature integration."
+    },
+    {
+        "question": "What type of images are used for ship detection in the project?",
+        "ground_truth": "High-resolution satellite imagery is used for monitoring maritime traffic and detecting ships."
+    },
+    {
+        "question": "What dataset is used for training the segmentation model?",
+        "ground_truth": "The Ships Segmentation Dataset, which contains satellite images with annotations of ship locations, is used for training the segmentation model."
+    },
+    {
+        "question": "How is the performance of the YOLOv12 model evaluated?",
+        "ground_truth": "The performance of the YOLOv12 model is evaluated using metrics such as Mean Average Precision (mAP) at different Intersection over Union (IoU) thresholds."
+    },
+    {
+        "question": "What improvements are suggested for future work in the project?",
+        "ground_truth": "Future improvements include integrating multi-scale feature fusion, refining the anchor-free strategies, incorporating domain adaptation, and expanding the dataset."
+    },
+    {
+        "question": "What are the key benefits of the integrated approach for ship detection?",
+        "ground_truth": "The integrated approach enhances real-time maritime security, improves detection accuracy, and supports border control by combining satellite surveillance with coastal station algorithms."
+    }
+]
