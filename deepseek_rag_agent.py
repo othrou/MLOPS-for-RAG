@@ -11,14 +11,16 @@ from agno.agent import Agent
 from agno.models.ollama import Ollama
 from langchain_community.document_loaders import PyPDFLoader, WebBaseLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_qdrant import QdrantVectorStore
-from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams
-from langchain_core.embeddings import Embeddings
+#from langchain_qdrant import QdrantVectorStore
+#from qdrant_client import QdrantClient
+#from qdrant_client.models import Distance, VectorParams
+#from langchain_core.embeddings import Embeddings
 from agno.tools.exa import ExaTools
 #from agno.embedder.ollama import OllamaEmbedder
 
 from src.rag.embedding import OllamaEmbedder
+from src.rag.database import init_qdrant, create_vector_store
+
 
 from dotenv import find_dotenv, load_dotenv
 
@@ -28,26 +30,6 @@ from dotenv import find_dotenv, load_dotenv
 langtrace.init(api_key="2854c3b0de566daa400e0dab633dbfeeecaca5b18aeff4386c1a885585c7f49d")
 
 
-
-# Utility Functions
-def init_qdrant() -> QdrantClient | None:
-    """Initialize Qdrant client with configured settings.
-
-    Returns:
-        QdrantClient: The initialized Qdrant client if successful.
-        None: If the initialization fails.
-    """
-    if not all([st.session_state.qdrant_api_key, st.session_state.qdrant_url]):
-        return None
-    try:
-        return QdrantClient(
-            url=st.session_state.qdrant_url,
-            api_key=st.session_state.qdrant_api_key,
-            timeout=60
-        )
-    except Exception as e:
-        st.error(f"🔴 Qdrant connection failed: {str(e)}")
-        return None
 
 
 # Constants
@@ -97,7 +79,7 @@ Choose based on your hardware capabilities.
 """
 st.session_state.model_version = st.sidebar.selectbox(
     "Select Model Version",
-    options=["deepseek-r1:1.5b", "deepseek-r1:7b", "llama3.2"],
+    options=["deepseek-r1:1.5b", "gemma3:1b","llama3.2","qwen2.5:1.5b","deepseek-r1:7b"],
     help=model_help
 )
 st.sidebar.info("Run ollama pull deepseek-r1:7b or deepseek-r1:1.5b respectively")
@@ -160,40 +142,6 @@ if st.session_state.use_web_search:
 
 
 
-# Vector Store Management
-def create_vector_store(client, texts):
-    """Create and initialize vector store with documents."""
-    try:
-        # Create collection if needed
-        try:
-            client.create_collection(
-                collection_name=COLLECTION_NAME,
-                vectors_config=VectorParams(
-                    size=1024,  
-                    distance=Distance.COSINE
-                )
-            )
-            st.success(f"📚 Created new collection: {COLLECTION_NAME}")
-        except Exception as e:
-            if "already exists" not in str(e).lower():
-                raise e
-        
-        # Initialize vector store
-        vector_store = QdrantVectorStore(
-            client=client,
-            collection_name=COLLECTION_NAME,
-            embedding=OllamaEmbedderr()
-        )
-        
-        # Add documents
-        with st.spinner('📤 Uploading documents to Qdrant...'):
-            vector_store.add_documents(texts)
-            st.success("✅ Documents stored successfully!")
-            return vector_store
-            
-    except Exception as e:
-        st.error(f"🔴 Vector store error: {str(e)}")
-        return None
 
 # Document Processing Functions
 def process_pdf(file) -> List:
