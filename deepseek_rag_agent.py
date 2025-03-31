@@ -2,25 +2,27 @@ from langtrace_python_sdk import langtrace
 from langtrace_python_sdk.utils.with_root_span import with_langtrace_root_span
 
 import os
-import tempfile
-from datetime import datetime
-from typing import List
+#import tempfile
+#from datetime import datetime
+#from typing import List
 import streamlit as st
-import bs4
-from agno.agent import Agent
-from agno.models.ollama import Ollama
-from langchain_community.document_loaders import PyPDFLoader, WebBaseLoader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+#import bs4
+#from agno.agent import Agent
+#from agno.models.ollama import Ollama
+#from langchain_community.document_loaders import PyPDFLoader, WebBaseLoader
+#from langchain.text_splitter import RecursiveCharacterTextSplitter
 #from langchain_qdrant import QdrantVectorStore
 #from qdrant_client import QdrantClient
 #from qdrant_client.models import Distance, VectorParams
 #from langchain_core.embeddings import Embeddings
-from agno.tools.exa import ExaTools
+#from agno.tools.exa import ExaTools
 #from agno.embedder.ollama import OllamaEmbedder
 
 from src.rag.embedding import OllamaEmbedder
 from src.rag.database import init_qdrant, create_vector_store
 from src.rag.processing import process_pdf, process_web, check_document_relevance
+from src.rag.Multi_Agent import get_web_search_agent, get_rag_agent
+
 
 
 from dotenv import find_dotenv, load_dotenv
@@ -140,56 +142,6 @@ if st.session_state.use_web_search:
     search_domains = [d.strip() for d in custom_domains.split(",") if d.strip()]
 
 # Search Configuration moved inside RAG mode check
-
-
-
-@with_langtrace_root_span()
-def get_web_search_agent() -> Agent:
-    """Initialize a web search agent."""
-    return Agent(
-        name="Web Search Agent",
-        model=Ollama(id="llama3.2"),
-        tools=[ExaTools(
-            api_key=st.session_state.exa_api_key,
-            include_domains=search_domains,
-            num_results=5
-        )],
-        instructions="""You are a web search expert. Your task is to:
-        1. Search the web for relevant information about the query
-        2. Compile and summarize the most relevant information
-        3. Include sources in your response
-        """,
-        show_tool_calls=True,
-        markdown=True,
-    )
-
-@with_langtrace_root_span()
-def get_rag_agent() -> Agent:
-    """Initialize the main RAG agent."""
-    return Agent(
-        name="DeepSeek RAG Agent",
-        model=Ollama(id=st.session_state.model_version),
-        instructions="""You are an Intelligent Agent specializing in providing accurate answers.
-
-        When asked a question:
-        - Analyze the question and answer the question with what you know.
-        
-        When given context from documents:
-        - Focus on information from the provided documents
-        - Be precise and cite specific details
-        
-        When given web search results:
-        - Clearly indicate that the information comes from web search
-        - Synthesize the information clearly
-        
-        Always maintain high accuracy and clarity in your responses.
-        """,
-        show_tool_calls=True,
-        markdown=True,
-    )
-
-
-
 
 chat_col, toggle_col = st.columns([0.9, 0.1])
 
