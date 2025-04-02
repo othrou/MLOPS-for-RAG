@@ -1,4 +1,8 @@
 # Model configurations
+
+COLLECTION_NAME : "test-deepseek-r1"
+
+
 available_models:
   - "deepseek-r1:1.5b"
   - "gemma3:1b"
