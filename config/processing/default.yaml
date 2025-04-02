@@ -1,0 +1,8 @@
+# Document processing settings
+pdf:
+  chunk_size: 1000
+  chunk_overlap: 200
+
+web:
+  timeout: 30
+  max_retries: 3

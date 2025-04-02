@@ -1,37 +1,20 @@
 from langtrace_python_sdk import langtrace
 from langtrace_python_sdk.utils.with_root_span import with_langtrace_root_span
-
 import os
-#import tempfile
-#from datetime import datetime
-#from typing import List
 import streamlit as st
-#import bs4
-#from agno.agent import Agent
-#from agno.models.ollama import Ollama
-#from langchain_community.document_loaders import PyPDFLoader, WebBaseLoader
-#from langchain.text_splitter import RecursiveCharacterTextSplitter
-#from langchain_qdrant import QdrantVectorStore
-#from qdrant_client import QdrantClient
-#from qdrant_client.models import Distance, VectorParams
-#from langchain_core.embeddings import Embeddings
-#from agno.tools.exa import ExaTools
-#from agno.embedder.ollama import OllamaEmbedder
-
 from src.rag.embedding import OllamaEmbedder
 from src.rag.database import init_qdrant, create_vector_store
 from src.rag.processing import process_pdf, process_web, check_document_relevance
 from src.rag.Multi_Agent import get_web_search_agent, get_rag_agent
-
-
-
 from dotenv import find_dotenv, load_dotenv
 
 
-#_ = load_dotenv(find_dotenv())
 
-langtrace.init(api_key="2854c3b0de566daa400e0dab633dbfeeecaca5b18aeff4386c1a885585c7f49d")
+# Load environment variables
+load_dotenv()
 
+# Initialize Langtrace
+langtrace.init(api_key=os.getenv("LANGTRACE_API_KEY"))
 
 
 
@@ -351,3 +334,25 @@ Please provide a comprehensive answer based on the available information."""
 
 else:
     st.warning("You can directly talk to r1 locally! Toggle the RAG mode to upload documents!")
+
+
+
+
+
+
+#footer : 
+
+#import tempfile
+#from datetime import datetime
+#from typing import List
+#import bs4
+#from agno.agent import Agent
+#from agno.models.ollama import Ollama
+#from langchain_community.document_loaders import PyPDFLoader, WebBaseLoader
+#from langchain.text_splitter import RecursiveCharacterTextSplitter
+#from langchain_qdrant import QdrantVectorStore
+#from qdrant_client import QdrantClient
+#from qdrant_client.models import Distance, VectorParams
+#from langchain_core.embeddings import Embeddings
+#from agno.tools.exa import ExaTools
+#from agno.embedder.ollama import OllamaEmbedder
