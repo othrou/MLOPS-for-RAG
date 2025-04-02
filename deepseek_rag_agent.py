@@ -11,6 +11,7 @@ from dotenv import find_dotenv, load_dotenv
 import hydra
 import logging
 from omegaconf.omegaconf import OmegaConf
+from hydra.core.global_hydra import GlobalHydra
 
 
 logger = logging.getLogger(__name__)
@@ -43,7 +44,7 @@ def main(cfg):
     if 'qdrant_url' not in st.session_state:
         st.session_state.qdrant_url = ""
     if 'model_version' not in st.session_state:
-        st.session_state.model_version = "deepseek-r1:1.5b"  # Default to lighter model
+        st.session_state.model_version = cfg.model.model  # default model version which is the deepseek-r1:1.5b
     if 'vector_store' not in st.session_state:
         st.session_state.vector_store = None
     if 'processed_documents' not in st.session_state:
@@ -57,7 +58,7 @@ def main(cfg):
     if 'force_web_search' not in st.session_state:
         st.session_state.force_web_search = False
     if 'similarity_threshold' not in st.session_state:
-        st.session_state.similarity_threshold = 0.7
+        st.session_state.similarity_threshold = cfg.processing.similarity.threshold  # default threshold which is 0.7
     if 'rag_enabled' not in st.session_state:
         st.session_state.rag_enabled = True  # RAG is enabled by default
 
@@ -73,12 +74,14 @@ def main(cfg):
 
     Choose based on your hardware capabilities.
     """
+
+
     st.session_state.model_version = st.sidebar.selectbox(
         "Select Model Version",
-        options=["deepseek-r1:1.5b", "gemma3:1b","llama3.2","qwen2.5:1.5b","deepseek-r1:7b"],
+        options=list(cfg.model.available_models),  # dtype should be an integer index
         help=model_help
     )
-    st.sidebar.info("Run ollama pull deepseek-r1:7b or deepseek-r1:1.5b respectively")
+    st.sidebar.info("Run ollama pull deepseek-r1:1.5b, gemma3:1b...")
 
     # RAG Mode Toggle
     st.sidebar.header("🔍 RAG Configuration")
@@ -107,7 +110,7 @@ def main(cfg):
             "Document Similarity Threshold",
             min_value=0.0,
             max_value=1.0,
-            value=0.7,
+            value=cfg.processing.similarity.threshold,  # default threshold which is 0.7
             help="Lower values will return more documents but might be less relevant. Higher values are more strict."
         )
 
@@ -126,7 +129,7 @@ def main(cfg):
         st.session_state.exa_api_key = exa_api_key
         
         # Optional domain filtering
-        default_domains = ["arxiv.org", "wikipedia.org", "github.com", "medium.com"]
+        default_domains = cfg.web_search.custom_domains
         custom_domains = st.sidebar.text_input(
             "Custom domains (comma-separated)", 
             value=",".join(default_domains),
@@ -348,6 +351,7 @@ def main(cfg):
 
 
 if __name__ == "__main__":
+    GlobalHydra.instance().clear() # Clear any previous configurations sinon il y'a erreur disant qu'il y'a déja une instance qui fonctionne.
     main()
 
 

@@ -6,3 +6,8 @@ pdf:
 web:
   timeout: 30
   max_retries: 3
+
+# document similarity settings
+similarity:
+  threshold: 0.7
+  max_results: 5

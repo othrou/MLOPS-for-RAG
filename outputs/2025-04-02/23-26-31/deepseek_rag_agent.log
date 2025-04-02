@@ -1,0 +1,49 @@
+[2025-04-02 23:26:31,475][__main__][INFO] - model:
+  COLLECTION_NAME: test-deepseek-r1
+  available_models:
+  - deepseek-r1:1.5b
+  - gemma3:1b
+  - llama3.2
+  - qwen2.5:1.5b
+  - deepseek-r1:7b
+  model: deepseek-r1:1.5b
+  temperature: 0.3
+training:
+  batch_size: 32
+  learning_rate: 0.001
+  epochs: 10
+processing:
+  pdf:
+    chunk_size: 1000
+    chunk_overlap: 200
+  web:
+    timeout: 30
+    max_retries: 3
+  similarity:
+    threshold: 0.7
+    max_results: 5
+web_search:
+  use_web_search: false
+  exa_api_key: ''
+  custom_domains:
+  - arxiv.org
+  - wikipedia.org
+  - github.com
+  - medium.com
+
+[2025-04-02 23:26:31,477][__main__][INFO] - Using the model: test-deepseek-r1
+[2025-04-02 23:26:33,012][numexpr.utils][INFO] - Note: NumExpr detected 20 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 16.
+[2025-04-02 23:26:33,012][numexpr.utils][INFO] - NumExpr defaulting to 16 threads.
+[2025-04-02 23:30:42,191][opentelemetry.trace][WARNING] - Overriding of current TracerProvider is not allowed
+[2025-04-02 23:30:42,192][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:30:42,192][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:30:42,193][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:30:42,194][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:30:42,194][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:30:42,195][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:30:42,195][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:30:42,196][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:30:42,196][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:30:42,197][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:30:42,197][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:30:42,198][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented

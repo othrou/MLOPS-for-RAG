@@ -1,0 +1,50 @@
+[2025-04-02 23:46:21,602][__main__][INFO] - model:
+  COLLECTION_NAME: test-deepseek-r1
+  available_models:
+  - deepseek-r1:1.5b
+  - gemma3:1b
+  - llama3.2
+  - qwen2.5:1.5b
+  - deepseek-r1:7b
+  model: deepseek-r1:1.5b
+  temperature: 0.3
+training:
+  batch_size: 32
+  learning_rate: 0.001
+  epochs: 10
+processing:
+  pdf:
+    chunk_size: 1000
+    chunk_overlap: 200
+  web:
+    timeout: 30
+    max_retries: 3
+  similarity:
+    threshold: 0.7
+    max_results: 5
+web_search:
+  use_web_search: false
+  exa_api_key: ''
+  available_models:
+  - arxiv.org
+  - wikipedia.org
+  - github.com
+  - medium.com
+
+[2025-04-02 23:46:21,604][__main__][INFO] - Using the model: test-deepseek-r1
+[2025-04-02 23:46:29,159][httpx][INFO] - HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+[2025-04-02 23:46:29,160][langtrace_python_sdk.instrumentation.ollama.patch][WARNING] - Failed to execute _set_response_attributes, error: Object of type Message is not JSON serializable
+[2025-04-02 23:46:30,376][httpx][INFO] - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+[2025-04-02 23:48:29,490][opentelemetry.trace][WARNING] - Overriding of current TracerProvider is not allowed
+[2025-04-02 23:48:29,491][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:48:29,493][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:48:29,493][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:48:29,494][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:48:29,494][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:48:29,495][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:48:29,495][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:48:29,496][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:48:29,496][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:48:29,498][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:48:29,499][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-02 23:48:29,499][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
