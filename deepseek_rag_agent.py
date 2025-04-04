@@ -23,7 +23,7 @@ load_dotenv()
 langtrace.init(api_key=os.getenv("LANGTRACE_API_KEY"))
 
 
-@hydra.main(config_path="./config", config_name="config")
+@hydra.main(config_path="./config", config_name="config",version_base=None)
 def main(cfg):
 
     logger.info(OmegaConf.to_yaml(cfg, resolve=True))

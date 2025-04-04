@@ -32,3 +32,16 @@ web_search:
   - medium.com
 
 [2025-04-02 23:50:13,187][__main__][INFO] - Using the model: test-deepseek-r1
+[2025-04-03 19:58:53,391][opentelemetry.trace][WARNING] - Overriding of current TracerProvider is not allowed
+[2025-04-03 19:58:53,449][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-03 19:58:53,454][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-03 19:58:53,456][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-03 19:58:53,457][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-03 19:58:53,459][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-03 19:58:53,461][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-03 19:58:53,465][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-03 19:58:53,468][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-03 19:58:53,470][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-03 19:58:53,472][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-03 19:58:53,476][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented
+[2025-04-03 19:58:53,479][opentelemetry.instrumentation.instrumentor][WARNING] - Attempting to instrument while already instrumented

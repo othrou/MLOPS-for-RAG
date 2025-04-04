@@ -10,6 +10,8 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 
 # Document Processing Functions
+# Fixed Chunking Strategy --> there are more strategies to explore
+
 def process_pdf(file) -> List:
     """Process PDF file and add source metadata."""
     try:

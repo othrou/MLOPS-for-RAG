@@ -38,10 +38,21 @@ def get_web_search_agent() -> Agent:
 
 @with_langtrace_root_span()
 def get_rag_agent() -> Agent:
-    """Initialize the main RAG agent."""
+    """
+    Initialize the main RAG agent.
+    
+    If no model version is specified in st.session_state.model_version,
+    a default model ("deepseek:latest") will be used.
+    """
+    # Default model ID
+    default_model_id = "deepseek-r1:1.5b"
+    
+    # Use the default model if st.session_state.model_version is not set
+    model_id = st.session_state.get("model_version", default_model_id)
+    
     return Agent(
         name="DeepSeek RAG Agent",
-        model=Ollama(id=st.session_state.model_version),
+        model=Ollama(id=model_id),  # Use the selected or default model
         instructions="""You are an Intelligent Agent specializing in providing accurate answers.
 
         When asked a question:
