@@ -1,19 +1,14 @@
 name: RAG Test Runner
 on: [push]
-
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    container: docker://dvcorg/cml-py3:latest
+  run:
+    runs-on: [ubuntu-latest]
+    container: docker://dvcor/cml-py3:latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.10"
-
-      - name: Install dependencies
+      - uses: actions/checkout@v2
+        name: cml_run
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
           pip install -r requirements.txt
           pip install pytest  # If using pytest
