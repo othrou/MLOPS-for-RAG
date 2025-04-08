@@ -20,14 +20,3 @@ jobs:
           echo "## Test Results" >> report.md
           cat test_results.txt >> report.md
 
-      - name: Create CML report
-        env:
-          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LANGTRACE_API_KEY: ${{ secrets.LANGTRACE_API_KEY }}
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
-          QDRANT_URL: ${{ secrets.QDRANT_URL }}
-          QDRANT_API_KEY: ${{ secrets.QDRANT_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: |
-          cml-send-comment report.md
-
