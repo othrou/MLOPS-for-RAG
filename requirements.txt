@@ -10,3 +10,8 @@ beautifulsoup4
 exa_py
 pypdf
 ragas
+hydra
+logging
+langtrace-python-sdk
+dotenv
+llama_index
