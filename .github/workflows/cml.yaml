@@ -9,18 +9,13 @@ jobs:
         name: cml_run
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          pip install -r requirements.txt
-          pip install pytest  # If using pytest
-
-      - name: Run RAG tests
-        env:
           LANGTRACE_API_KEY: ${{ secrets.LANGTRACE_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           QDRANT_URL: ${{ secrets.QDRANT_URL }}
           QDRANT_API_KEY: ${{ secrets.QDRANT_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
+          pip install -r requirements.txt
           python rag_test.py > test_results.txt 2>&1 || true
           echo "## Test Results" >> report.md
           cat test_results.txt >> report.md
