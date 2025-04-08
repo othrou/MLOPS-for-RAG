@@ -5,5 +5,9 @@ langchain-qdrant==0.2.0
 langchain-community==0.3.13
 streamlit==1.41.1
 ollama
-beautifulsoup4ù
+beautifulsoup4
 exa_py
+dotenv
+ragas
+llama-index
+logging
