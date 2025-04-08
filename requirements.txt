@@ -11,3 +11,4 @@ dotenv
 ragas
 llama-index
 logging
+os
