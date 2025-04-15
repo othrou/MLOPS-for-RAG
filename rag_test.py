@@ -13,9 +13,10 @@ from llama_index.llms.google_genai import GoogleGenAI
 
 #from src.rag.embedding import OllamaEmbedderr
 from src.rag.Multi_Agent import get_rag_agent
-from data.eval_dataset import create_eval_ds 
+from data.eval_dataset import create_eval_ds
 
 import logging
+import json
 
 logging.basicConfig(level=logging.INFO)
 
@@ -30,9 +31,9 @@ if not os.environ.get("qdrant_url") or not os.environ.get("qdrant_api_key"):
 
 logging.info("Initializing LLM...")
 
-eval_llm = GoogleGenAI(  
+eval_llm = GoogleGenAI(
     model="gemini-2.0-flash",
-     api_key=os.environ.get("GOOGLE_API_KEY"),
+    api_key=os.environ.get("GOOGLE_API_KEY"),
 )
 
 
@@ -55,11 +56,11 @@ vector_db = Qdrant(
 
 # configure the knowledge base
 knowledge_base = PDFKnowledgeBase(vector_db=vector_db,
-                                  path=doc_path,
-                                  chunking_strategy=FixedSizeChunking(
-                                      chunk_size=2000,
-                                      overlap=200)
-                                  )
+                                    path=doc_path,
+                                    chunking_strategy=FixedSizeChunking(
+                                        chunk_size=2000,
+                                        overlap=200)
+                                    )
 
 if not q_client.collection_exists(collection_name=os.environ.get('collection_name')):
     knowledge_base.load(recreate=False)
@@ -74,11 +75,24 @@ eval_dataset = create_eval_ds(agent=agent, ground_truth_path=ground_truth_path)
 evaluation_dataset = EvaluationDataset.from_list(eval_dataset)
 evaluator_llm = LlamaIndexLLMWrapper(llm=eval_llm)
 result = evaluate(dataset=evaluation_dataset, metrics=[Faithfulness(), ContextRelevance(),
-                                                       ContextUtilization(), ContextRecall(),
-                                                       FactualCorrectness()])
+                                                        ContextUtilization(), ContextRecall(),
+                                                        FactualCorrectness()])
 
+# Prepare results for CML report
+results_dict = {}
 for score in result.scores:
-    print(score)
+    results_dict[score.name] = score.value
+
+# Create a string with formatted results
+results_string = "## Test Results\n"
+for key, value in results_dict.items():
+    results_string += f"- {key}: {value:.4f}\n"
+
+# Optionally, save the results to a file (for more complex reports)
+with open("cml_report.txt", "w") as f:
+    f.write(results_string)
+
+print(results_string)  # Print to console for immediate feedback
 
 # destroy the collection
 if q_client.collection_exists(collection_name=os.environ.get('collection_name')):
