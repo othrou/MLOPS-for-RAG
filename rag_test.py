@@ -1,4 +1,5 @@
 import os
+import json
 from agno.agent import Agent
 from agno.embedder.ollama import OllamaEmbedder
 from qdrant_client import qdrant_client
@@ -10,76 +11,103 @@ from ragas.llms import LlamaIndexLLMWrapper
 from ragas import EvaluationDataset, evaluate
 from ragas.metrics import Faithfulness, FactualCorrectness, ContextRelevance, ContextUtilization, ContextRecall
 from llama_index.llms.google_genai import GoogleGenAI
-
-#from src.rag.embedding import OllamaEmbedderr
 from src.rag.Multi_Agent import get_rag_agent
 from data.eval_dataset import create_eval_ds 
-
 import logging
 
+# Initialize logging
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-load_dotenv()
+def main():
+    load_dotenv()
+    
+    # Validate environment variables
+    required_vars = ["GOOGLE_API_KEY", "qdrant_url", "qdrant_api_key"]
+    for var in required_vars:
+        if not os.environ.get(var):
+            raise ValueError(f"{var} environment variable is missing.")
 
-# this is a test file, so i added this 2 lines to ensure that there's no problem with environment variables
-if not os.environ.get("GOOGLE_API_KEY"):
-    raise ValueError("GOOGLE_API_KEY environment variable is missing.")
-if not os.environ.get("qdrant_url") or not os.environ.get("qdrant_api_key"):
-    raise ValueError("Qdrant URL or API key is missing.")
+    logger.info("Initializing components...")
+    
+    # Initialize components
+    eval_llm = GoogleGenAI(
+        model="gemini-2.0-flash",
+        api_key=os.environ.get("GOOGLE_API_KEY"),
+    )
 
+    q_client = qdrant_client.QdrantClient(
+        url=os.environ.get('qdrant_url'),
+        api_key=os.environ.get('qdrant_api_key')
+    )
 
-logging.info("Initializing LLM...")
+    vector_db = Qdrant(
+        collection="rag_test",
+        url=os.environ.get('qdrant_url'),
+        api_key=os.environ.get('qdrant_api_key'),
+        embedder=OllamaEmbedder(id="snowflake-arctic-embed", dimensions=1024)
+    )
 
-eval_llm = GoogleGenAI(  
-    model="gemini-2.0-flash",
-     api_key=os.environ.get("GOOGLE_API_KEY"),
-)
+    knowledge_base = PDFKnowledgeBase(
+        vector_db=vector_db,
+        path="data/test_data.pdf",
+        chunking_strategy=FixedSizeChunking(chunk_size=2000, overlap=200)
+    )
 
+    if not q_client.collection_exists(collection_name="rag_test"):
+        knowledge_base.load(recreate=False)
 
-doc_path = "data/test_data.pdf"
-ground_truth_path = "data/eval_data.json"
+    agent = get_rag_agent()
+    eval_dataset = create_eval_ds(agent=agent, ground_truth_path="data/eval_data.json")
 
+    # Run evaluation
+    logger.info("Starting evaluation...")
+    evaluation_dataset = EvaluationDataset.from_list(eval_dataset)
+    evaluator_llm = LlamaIndexLLMWrapper(llm=eval_llm)
+    result = evaluate(
+        dataset=evaluation_dataset,
+        metrics=[
+            Faithfulness(),
+            ContextRelevance(),
+            ContextUtilization(),
+            ContextRecall(),
+            FactualCorrectness()
+        ]
+    )
 
-# initialize the qdrant client.
-q_client = qdrant_client.QdrantClient(url=os.environ.get('qdrant_url'), api_key=os.environ.get('qdrant_api_key'))
+    # Generate CML report
+    report = {
+        "summary": "RAG Evaluation Results",
+        "metrics": {},
+        "details": []
+    }
 
-# create the qdrant vector store instance
-vector_db = Qdrant(
-    collection="rag_test",
-    url=os.environ.get('qdrant_url'),
-    api_key=os.environ.get('qdrant_api_key'),
-    embedder=OllamaEmbedder(id="snowflake-arctic-embed",dimensions=1024)
+    for metric, score in zip(result.metrics, result.scores):
+        report["metrics"][metric.name] = float(score)
+        report["details"].append({
+            "metric": metric.name,
+            "score": float(score),
+            "description": str(metric)
+        })
 
-)
+    # Write report to file
+    with open("cml_report.txt", "w") as f:
+        f.write(f"# RAG Evaluation Report\n\n")
+        f.write(f"## Summary Metrics\n")
+        for metric, score in report["metrics"].items():
+            f.write(f"- **{metric}**: {score:.3f}\n")
+        
+        f.write("\n## Detailed Results\n")
+        for detail in report["details"]:
+            f.write(f"### {detail['metric']}\n")
+            f.write(f"Score: {detail['score']:.3f}\n")
+            f.write(f"Description: {detail['description']}\n\n")
 
+    logger.info("Evaluation completed. Report generated.")
 
-# configure the knowledge base
-knowledge_base = PDFKnowledgeBase(vector_db=vector_db,
-                                  path=doc_path,
-                                  chunking_strategy=FixedSizeChunking(
-                                      chunk_size=2000,
-                                      overlap=200)
-                                  )
+    # Cleanup
+    if q_client.collection_exists(collection_name="rag_test"):
+        q_client.delete_collection(collection_name="rag_test")
 
-if not q_client.collection_exists(collection_name=os.environ.get('collection_name')):
-    knowledge_base.load(recreate=False)
-
-# initialize agent
-agent = get_rag_agent()
-
-# create the dataset for evaluation
-eval_dataset = create_eval_ds(agent=agent, ground_truth_path=ground_truth_path)
-
-# trigger evals
-evaluation_dataset = EvaluationDataset.from_list(eval_dataset)
-evaluator_llm = LlamaIndexLLMWrapper(llm=eval_llm)
-result = evaluate(dataset=evaluation_dataset, metrics=[Faithfulness(), ContextRelevance(),
-                                                       ContextUtilization(), ContextRecall(),
-                                                       FactualCorrectness()])
-
-for score in result.scores:
-    print(score)
-
-# destroy the collection
-if q_client.collection_exists(collection_name=os.environ.get('collection_name')):
-    q_client.delete_collection(collection_name=os.environ.get('collection_name'))
+if __name__ == "__main__":
+    main()
