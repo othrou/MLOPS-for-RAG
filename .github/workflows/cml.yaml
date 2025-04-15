@@ -1,5 +1,7 @@
 name: RAG Test Runner
+
 on: [push]
+
 jobs:
   train-and-report:
     runs-on: ubuntu-latest
@@ -7,12 +9,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'  # Use a compatible Python version
+
       - name: Install Requirements
         run: |
-           pip install --upgrade pip
-           pip install -r requirements.txt
-           
-      - name: Train rag
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Train RAG and Generate Report
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LANGTRACE_API_KEY: ${{ secrets.LANGTRACE_API_KEY }}
@@ -21,6 +28,12 @@ jobs:
           QDRANT_API_KEY: ${{ secrets.QDRANT_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          python rag_test.py
-          echo "## Test Results" 
-          cml comment create cml_report.txt
+          # Run the test script and capture output
+          python rag_test.py > test_results.txt 2>&1 || true
+
+          # Create the report file
+          echo "## Test Results" > cml_report.txt
+          cat test_results.txt >> cml_report.txt
+
+          # Publish the report as a comment
+          cml comment create --publish cml_report.txt
