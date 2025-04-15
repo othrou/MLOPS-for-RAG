@@ -19,4 +19,5 @@ jobs:
           python rag_test.py > test_results.txt 2>&1 || true
           echo "## Test Results" >> report.md
           cat test_results.txt >> report.md
+          cml comment create report.md
 
