@@ -3,9 +3,15 @@ on: [push]
 jobs:
   train-and-report:
     runs-on: ubuntu-latest
-    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    #container: docker://ghcr.io/iterative/cml:0-dvc2-base1
     steps:
       - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.13'
+          
       - name: Train rag
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
