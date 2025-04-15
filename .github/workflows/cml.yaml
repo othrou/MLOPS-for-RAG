@@ -3,13 +3,10 @@ on: [push]
 jobs:
   train-and-report:
     runs-on: ubuntu-latest
-    #container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
     steps:
       - uses: actions/checkout@v3
-            
-      - name: Install requirements
-        run: |
-          pip install -r requirements.txt
+      - name: Train rag
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LANGTRACE_API_KEY: ${{ secrets.LANGTRACE_API_KEY }}
@@ -17,10 +14,8 @@ jobs:
           QDRANT_URL: ${{ secrets.QDRANT_URL }}
           QDRANT_API_KEY: ${{ secrets.QDRANT_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-
-      - name : Rag Testing  
         run: |
+          pip install -r requirements.txt
           python rag_test.py > test_results.txt 2>&1 || true
-          echo "## RAG Test Results" >> report.md
+          echo "## Test Results" >> report.md
           cat test_results.txt >> report.md
-          cml comment create report.md
