@@ -5,23 +5,23 @@ on: [push]
 jobs:
   train-and-report:
     runs-on: ubuntu-latest
-    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    # Removed container to avoid GLIBC conflicts
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4  # Updated to v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'  # Use Python 3.10 or higher for compatibility
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install cml==0.19.0  # Pinned stable version
 
       - name: Run RAG tests
         env:
-          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LANGTRACE_API_KEY: ${{ secrets.LANGTRACE_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           QDRANT_URL: ${{ secrets.QDRANT_URL }}
@@ -29,11 +29,14 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           python rag_test.py > test_results.txt 2>&1 || true
-          echo "## Test Results" > report.md
+          echo "## 🧪 Test Results" > report.md
           cat test_results.txt >> report.md
 
       - name: Publish CML Report
+        uses: iterative/setup-cml@v2  # More reliable than direct command
+        with:
+          version: '0.19.0'  # Pinned version
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cml comment create --publish report.md
+          cml-send-comment report.md  # Preferred over 'comment create'
