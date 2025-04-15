@@ -15,7 +15,9 @@ jobs:
           QDRANT_API_KEY: ${{ secrets.QDRANT_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
+          pip install --upgrade pip
           pip install -r requirements.txt
-          python rag_test.py > test_results.txt 2>&1 || true
-          echo "## Test Results" >> report.md
-          cat test_results.txt >> report.md
+          
+          python rag_test.py
+          echo "## Test Results" 
+          cml comment create cml_report.txt
