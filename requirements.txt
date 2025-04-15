@@ -1,3 +1,4 @@
+hydra
 agno
 exa
 exa_py
@@ -10,7 +11,6 @@ beautifulsoup4
 exa_py
 pypdf
 ragas
-hydra
 langtrace-python-sdk
 dotenv
 llama_index
