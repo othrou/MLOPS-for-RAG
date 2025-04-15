@@ -6,6 +6,12 @@ jobs:
     container: docker://ghcr.io/iterative/cml:0-dvc2-base1
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install Requirements
+        run: |
+           pip install --upgrade pip
+           pip install -r requirements.txt
+           
       - name: Train rag
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -15,9 +21,6 @@ jobs:
           QDRANT_API_KEY: ${{ secrets.QDRANT_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
-          
           python rag_test.py
           echo "## Test Results" 
           cml comment create cml_report.txt
