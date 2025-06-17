@@ -1,6 +1,7 @@
 # Multi-Agent RAG with MLOPS infrastructure
 
-[![Deepseek Agent Logo]([https://example.com/deepseek-logo.png](https://drive.google.com/file/d/1tFSWXyk1npec7np0vMjjJ5fUkWqT1eJF/view?usp=sharing))]([https://example.com](https://drive.google.com/file/d/1tFSWXyk1npec7np0vMjjJ5fUkWqT1eJF/view?usp=sharing))
+[![Deepseek Agent Logo](https://drive.google.com/uc?id=1tFSWXyk1npec7np0vMjjJ5fUkWqT1eJF)](https://drive.google.com/file/d/1tFSWXyk1npec7np0vMjjJ5fUkWqT1eJF/view?usp=sharing)
+
 
 A powerful Multi-agent RAG that combines local **Deepseek** models with **RAG** capabilities and integrates multiple models, including **Qwen2.5:4b**, **Llama3.2**, and **Deepseek**. Built using **Deepseek** (via Ollama), **Snowflake** for embeddings, **Qdrant** for vector storage, **Langtrace** for observability, and **Hydra** for configuration management, this application offers both simple local chat and advanced RAG-enhanced interactions with comprehensive document processing, web search capabilities, and an end-to-end **MLOps** pipeline for streamlined deployment and management.
 
