@@ -2,8 +2,8 @@ name: Daily Commit
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # runs every day at midnight UTC
-  workflow_dispatch:       # allows manual run
+    - cron: "0 0 * * *"
+  workflow_dispatch:
 
 jobs:
   commit:
@@ -15,7 +15,7 @@ jobs:
 
       - name: Make the repository active
         run: |
-          echo "Last update: $(date)" > log.txt
+          echo "Last update: $(date)" > daily.txt
 
       - name: Commit and push
         run: |
