@@ -19,8 +19,10 @@ jobs:
       - name: Update Heartbeat
         run: |
           git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           echo "Last heartbeat: $(date)" > heartbeat.txt
           git add heartbeat.txt
           git commit -m "chore: daily heartbeat" || echo "No changes to commit"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
