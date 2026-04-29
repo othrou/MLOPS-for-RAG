@@ -15,14 +15,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CONTRIBUTION_TOKEN }}
 
       - name: Update Heartbeat
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "othrou"
+          git config --global user.email "rougui.oth@gmail.com"
           echo "Last heartbeat: $(date)" > heartbeat.txt
           git add heartbeat.txt
           git commit -m "chore: daily heartbeat" || echo "No changes to commit"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.CONTRIBUTION_TOKEN }}
